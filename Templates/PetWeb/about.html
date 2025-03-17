@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title_block %}About petweb{% endblock %}
+
+{% block body_block %}
+    <div>
+        here is the about page. <br />
+        <strong>This tutorial has been put together by Zak.</strong><br />
+    </div>
+
+    <p>Visits: {{ visits }}</p>  
+
+    <div>
+        <a href="{% url 'petweb:index' %}">Index Page</a><br />
+    </div>
+{% endblock %}

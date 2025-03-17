@@ -1,8 +1,7 @@
-"""
-URL configuration for uniwebapp project.
+"""tango_with_django_project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
+    https://docs.djangoproject.com/en/2.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -15,12 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.urls import include
+from django.urls import path, include  
+from django.conf import settings
+from django.conf.urls.static import static
 from petweb import views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
     path('', views.index, name='index'),
-    path('petweb/', include('petweb.urls')),
-]
+    path('admin/', admin.site.urls),  
+    path('accounts/', include('registration.backends.simple.urls')),
+    path('petweb/', include(('petweb.urls', 'petweb'), namespace='petweb')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

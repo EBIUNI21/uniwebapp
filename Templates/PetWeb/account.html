@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title_block %}
+    My Account
+{% endblock %}
+
+{% block body_block %}
+    <div class="container">
+        <h2>My Account</h2>
+
+        <div class="card p-3 mb-3">
+            <h4>Welcome, {{ user.username }}!</h4>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+
+        <h3>Your Posts</h3>
+        {% if user.post_set.all %}
+            <ul class="list-group">
+                {% for post in user.post_set.all %}
+                    <li class="list-group-item">
+                        <strong>{{ post.title }}</strong> - <small>{{ post.time }}</small>
+                        <a href="{% url 'petweb:view_post' post.id %}" class="btn btn-sm btn-info">View</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't made any posts yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title_block %}
+    Community
+{% endblock %}
+
+{% block body_block %}
+<div class="container">
+    <h1>Community</h1>
+
+    <form method="GET" action="{% url 'petweb:community' %}" class="mb-4">
+        <input type="text" name="q" placeholder="Search posts or users..." value="{{ query }}" class="form-control">
+        <button type="submit" class="btn btn-primary mt-2">Search</button>
+    </form>
+
+    {% if query %}
+        <h2>Search Results for "{{ query }}"</h2>
+
+        <h3>Users</h3>
+        {% if users %}
+            <ul>
+                {% for user in users %}
+                    <li><a href="{% url 'petweb:user_profile' user.username %}">{{ user.username }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+
+        <h3>Posts</h3>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.statement }}</p>
+                        
+                        <a href="{% url 'petweb:view_post' post.id %}" class="btn btn-info">View Post</a>
+
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts found.</p>
+        {% endif %}
+    {% endif %}
+
+    {% if not query %}
+        <h2>Recent Posts</h2>
+        {% for post in posts %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.statement }}</p>
+                    <a href="{% url 'petweb:view_post' post.id %}" class="btn btn-info">View Post</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+</div>
+<div class="container"></div>
+
+    <a href="{% url 'petweb:create_post' %}" class="btn btn-success mb-3">Create New Post</a>
+
+</div>
+{% endblock %}
