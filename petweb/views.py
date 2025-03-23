@@ -6,12 +6,11 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from petweb.models import Post, Comment, UserProfile
+from petweb.models import Post, Comment, UserProfile, Like
 from petweb.forms import PostForm, CommentForm
 from petweb.forms import UserForm, UserProfileForm
 from django.contrib.auth.models import User 
-
-
+from django.http import JsonResponse
 
 
 def index(request):
@@ -204,6 +203,8 @@ def view_post(request, post_id):
 
     reply_to = request.GET.get("reply_to", None)
 
+    user_has_liked = post.like_set.filter(user=request.user).exists()
+
     if request.method == "POST":
         content = request.POST.get("content")
         replyee_id = request.POST.get("replyee_id")
@@ -224,13 +225,34 @@ def view_post(request, post_id):
             )
 
             return redirect('petweb:view_post', post_id=post.id)
-
-    return render(request, "petweb/view_post.html", {
+        
+    context = {
         "post": post,
-        "top_level_comments": top_level_comments, 
-        "all_comments": all_comments, 
+        "top_level_comments": top_level_comments,
+        "all_comments": all_comments,
         "reply_to": int(reply_to) if reply_to else None,
-    })
+        "user_has_liked": user_has_liked,  # Pass this to the template
+    }
+    return render(request, "petweb/view_post.html", context)
+
+@login_required
+def like_post(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        user = request.user
+
+        post = Post.objects.get(id=post_id)
+
+        like, created = Like.objects.get_or_create(user=user, post=post)
+
+        if not created:
+            like.delete()
+            is_liked = False
+        else:
+            is_liked = True
+
+        like_count = post.like_set.count()
+        return JsonResponse({'is_liked': is_liked, 'like_count': like_count})
 
 @login_required
 def account(request):
