@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block title_block %}
     My Account
 {% endblock %}
@@ -8,10 +7,11 @@
     <div class="container">
         <h2>My Account</h2>
 
-        <div class="card p-3 mb-3">
+        <div>
             <h4>Welcome, {{ user.username }}!</h4>
             <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
+        
 
         <h3>Your Posts</h3>
         {% if user.post_set.all %}
@@ -27,4 +27,16 @@
             <p>You haven't made any posts yet.</p>
         {% endif %}
     </div>
+    {% if account.picture %}
+    <hr>
+    <div class="container mb-4">
+        <div class="text-center">
+            <img src="{{ MEDIA_URL }}{{ account.picture }}"
+                 width="300"
+                 height="300"
+                 class="img-thumbnail"
+                 alt="{{ account.user.username }}'s profile image" />
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}

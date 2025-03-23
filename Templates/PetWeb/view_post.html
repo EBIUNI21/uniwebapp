@@ -11,7 +11,7 @@
         {% if post.image %}
             <img src="{{ post.image.url }}" alt="Post Image" class="img-fluid mb-3">
         {% endif %}
-
+        <p><strong>Views:</strong> {{ post.views }}</p>
         <p>{{ post.statement }}</p>
         <hr>
 

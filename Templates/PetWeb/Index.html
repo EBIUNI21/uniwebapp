@@ -4,39 +4,12 @@
 {% block title_block %}Homepage{% endblock %}
 
 {% block body_block %}
+<div class="container-card text-center">
     <h1>Welcome to PetWeb!</h1>
-
-    <div>
-        {% if user.is_authenticated %}
-            <p>Hello, {{ user.username }}!</p>
-        {% else %}
-            <p>Hello User!</p>
-        {% endif %}
-    </div>
-
-    <div>
-        <h2>Most Liked Categories</h2>
-        {% if categories %}
-            <ul>
-                {% for category in categories %}
-                <li>
-                    <a href="{% url 'petweb:show_category' category.slug %}">
-                        {{ category.name }}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
-
-    <div>
-        <h2>Most Viewed Pages</h2>
-        {% if pages %}
-            <ul>
-                {% for page in pages %}
-                    <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.username }}!</p>
+    {% else %}
+        <p>Hello User! Please log in or register to join our community.</p>
+    {% endif %}
+</div>
 {% endblock %}

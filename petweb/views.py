@@ -176,11 +176,7 @@ def register(request):
         'registered': registered
     })
 
-def user_profile(request, username):
-    user = get_object_or_404(User, username=username) 
-    profile= UserProfile.objects.get_or_create(user=user) 
 
-    return render(request, 'petweb/user_profile.html', {'profile': profile, 'user': user})
 
 @login_required
 def create_post(request):
@@ -196,16 +192,14 @@ def create_post(request):
 
     return render(request, 'petweb/create_post.html', {'form': form})
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from petweb.models import Post, Comment
-
 @login_required
 def view_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    
+
+    post.views += 1
+    post.save()
+
     all_comments = Comment.objects.filter(post=post).order_by("time")
-    
     top_level_comments = all_comments.filter(replyee__isnull=True)
 
     reply_to = request.GET.get("reply_to", None)
@@ -238,5 +232,31 @@ def view_post(request, post_id):
         "reply_to": int(reply_to) if reply_to else None,
     })
 
+@login_required
 def account(request):
-    return render(request, 'petweb/account.html')
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('petweb:account')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    context = {
+        "form": form,
+    }
+    return render(request, 'petweb/account.html', context)
+
+def goto_url(request):
+    page_id = request.GET.get('page_id')
+    if page_id:
+        try:
+            page = Page.objects.get(id=page_id)
+            page.views += 1
+            page.save()
+            return redirect(page.url)
+        except Page.DoesNotExist:
+            pass
+    return redirect(reverse('petweb:index'))
