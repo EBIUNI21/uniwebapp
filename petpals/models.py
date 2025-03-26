@@ -30,7 +30,7 @@ class Page(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     website = models.URLField(blank=True)
-    picture = models.ImageField(upload_to= 'profile_images', blank=True)
+    picture = models.ImageField(upload_to= 'profile_images', default='profile_images/default.jpg', blank=True)
     def __str__(self):
         return self.user.username
 
@@ -57,3 +57,13 @@ class Comment(models.Model):
         return self.content
     def get_replies(self):
         return Comment.objects.filter(replyee=self)
+    
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'post')
+
+    def __str__(self):
+        return f"{self.user.username} liked {self.post.title}"

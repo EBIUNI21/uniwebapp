@@ -1,9 +1,9 @@
 from django import template
-from petweb.models import Category
+from petpals.models import Category
 
 register = template.Library()
 
-@register.inclusion_tag('petweb/categories.html')
+@register.inclusion_tag('petpals/categories.html')
 def get_category_list(current_category=None):
     return {'categories': Category.objects.all(),
             'current_category': current_category}

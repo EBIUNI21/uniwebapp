@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                     "category",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="petweb.category",
+                        to="petpals.category",
                     ),
                 ),
             ],
@@ -109,7 +109,7 @@ class Migration(migrations.Migration):
                         null=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="replies",
-                        to="petweb.comment",
+                        to="petpals.comment",
                     ),
                 ),
                 (
@@ -124,7 +124,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="comments",
-                        to="petweb.post",
+                        to="petpals.post",
                     ),
                 ),
             ],

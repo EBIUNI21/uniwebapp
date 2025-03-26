@@ -1,5 +1,5 @@
 from django.contrib import admin
-from petweb.models import UserProfile, Category, Page
+from petpals.models import UserProfile, Category, Page
 
 admin.site.register(UserProfile)
 

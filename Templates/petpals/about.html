@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title_block %}About petweb{% endblock %}
+{% block title_block %}About petpals{% endblock %}
 
 {% block body_block %}
     <div>
@@ -12,6 +12,6 @@
     <p>Visits: {{ visits }}</p>  
 
     <div>
-        <a href="{% url 'petweb:index' %}">Index Page</a><br />
+        <a href="{% url 'petpals:index' %}">Index Page</a><br />
     </div>
 {% endblock %}

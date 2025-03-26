@@ -4,7 +4,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'uniwebapp.settings')
 import django
 django.setup()
 
-from petweb.models import Category, Page
+from petpals.models import Category, Page
 from django.utils.text import slugify
 
 
@@ -55,5 +55,5 @@ def populate():
             print(f'- {c}: {p}')
 
 if __name__ == '__main__':
-    print('Starting Petweb population script...')
+    print('Starting petpals population script...')
     populate()

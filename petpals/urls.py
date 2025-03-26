@@ -1,8 +1,8 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from petweb import views
+from petpals import views
 
-app_name = 'petweb' 
+app_name = 'petpals' 
 
 
 urlpatterns = [path('', views.index, name='index'),
@@ -18,4 +18,5 @@ urlpatterns = [path('', views.index, name='index'),
                path('community/post/<int:post_id>/', views.view_post, name='view_post'),
                path('account/', views.account, name='account'),
                path('goto/', views.goto_url, name='goto'),
+               path('like/', views.like_post, name='like_post'),
 ]

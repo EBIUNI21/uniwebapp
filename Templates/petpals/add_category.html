@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block title_block %}
-    Add a Page
+    Add a Category
 {% endblock %}
 
 {% block body_block %}
-    <h1>Add a Page to {{ category.name }}</h1>
+    <h1>Add a Category</h1>
 
-    <form id="page_form" method="post" action="{% url 'petweb:add_page' category.slug %}">
+    <form id="category_form" method="post" action="{% url 'petpals:add_category' %}">
         {% csrf_token %}
 
         {% for hidden in form.hidden_fields %}
@@ -24,9 +24,9 @@
             </div>
         {% endfor %}
 
-        <input type="submit" name="submit" value="Add Page" />
+        <input type="submit" name="submit" value="Create Category" />
     </form>
 
     <br />
-    <a href="{% url 'petweb:show_category' category.slug %}">Back to {{ category.name }}</a>
+    <a href="{% url 'petpals:index' %}">Back to Home</a>
 {% endblock %}

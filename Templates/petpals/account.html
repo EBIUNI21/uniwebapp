@@ -8,10 +8,23 @@
         <h2>My Account</h2>
 
         <div>
-            <h4>Welcome, {{ user.username }}!</h4>
+            <p>Welcome, {{ user.username }}!</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
-        
+
+        {% if user.userprofile.picture and user.userprofile.picture.name %}
+            <h4> Profile Picture:</h4>
+            <img src="{{ user.userprofile.picture.url }}" 
+                alt="Profile picture"
+                class="img-thumbnail"
+                width="300" height="300">
+        {% else %}
+            <h4> Profile Picture:</h4>
+            <img src="{{ MEDIA_URL }}profile_images/default.jpg" 
+                alt="Default profile picture"
+                class="img-thumbnail"
+                width="300" height="300">
+        {% endif %}
 
         <h3>Your Posts</h3>
         {% if user.post_set.all %}
@@ -19,7 +32,7 @@
                 {% for post in user.post_set.all %}
                     <li class="list-group-item">
                         <strong>{{ post.title }}</strong> - <small>{{ post.time }}</small>
-                        <a href="{% url 'petweb:view_post' post.id %}" class="btn btn-sm btn-info">View</a>
+                        <a href="{% url 'petpals:view_post' post.id %}" class="btn btn-sm btn-info">View</a>
                     </li>
                 {% endfor %}
             </ul>
@@ -27,16 +40,5 @@
             <p>You haven't made any posts yet.</p>
         {% endif %}
     </div>
-    {% if account.picture %}
-    <hr>
-    <div class="container mb-4">
-        <div class="text-center">
-            <img src="{{ MEDIA_URL }}{{ account.picture }}"
-                 width="300"
-                 height="300"
-                 class="img-thumbnail"
-                 alt="{{ account.user.username }}'s profile image" />
-        </div>
-    </div>
-    {% endif %}
+
 {% endblock %}

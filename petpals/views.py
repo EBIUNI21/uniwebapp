@@ -1,15 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from petweb.models import Category, Page
-from petweb.forms import PageForm, CategoryForm, UserForm, UserProfileForm
+from petpals.models import Category, Page, Like
+from petpals.forms import PageForm, CategoryForm, UserForm, UserProfileForm
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from petweb.models import Post, Comment, UserProfile
-from petweb.forms import PostForm, CommentForm
-from petweb.forms import UserForm, UserProfileForm
+from petpals.models import Post, Comment, UserProfile
+from petpals.forms import PostForm, CommentForm
+from petpals.forms import UserForm, UserProfileForm
 from django.contrib.auth.models import User 
+from django.http import JsonResponse
 
 
 
@@ -22,7 +23,7 @@ def index(request):
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
     visitor_cookie_handler(request)
-    response = render(request, 'petweb/index.html', context=context_dict)
+    response = render(request, 'petpals/index.html', context=context_dict)
     return response
 
 def about(request):
@@ -33,7 +34,7 @@ def about(request):
     visits = request.session.get('visits', 1)
 
     context_dict = {'visits': visits }
-    return render(request, 'petweb/about.html', context=context_dict)
+    return render(request, 'petpals/about.html', context=context_dict)
 
 def show_category(request, category_name_slug):
     context_dict = {}
@@ -46,7 +47,7 @@ def show_category(request, category_name_slug):
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
-    return render(request, 'petweb/category.html', context=context_dict)
+    return render(request, 'petpals/category.html', context=context_dict)
 
 @login_required
 def add_category(request):
@@ -55,11 +56,11 @@ def add_category(request):
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
-            return redirect('/petweb/')
+            return redirect('/petpals/')
         else:
             print(form.errors)
 
-    return render(request, 'petweb/add_category.html', {'form': form})
+    return render(request, 'petpals/add_category.html', {'form': form})
 
 @login_required
 def add_page(request, category_name_slug):
@@ -69,7 +70,7 @@ def add_page(request, category_name_slug):
         category = None
 
     if category is None:
-        return redirect('/petweb/')
+        return redirect('/petpals/')
     
     form = PageForm()
     if request.method =='POST':
@@ -82,10 +83,10 @@ def add_page(request, category_name_slug):
                 page.views = 0
                 page.save()
 
-                return redirect(reverse('petweb:show_category', kwargs={'category_name_slug': category_name_slug}))
+                return redirect(reverse('petpals:show_category', kwargs={'category_name_slug': category_name_slug}))
         else:
             print(form.errors)
-    return render(request, 'petweb/add_page.html', {'form': form, 'category': category})
+    return render(request, 'petpals/add_page.html', {'form': form, 'category': category})
 
 def some_view(request):
     if not request.user.is_authenticated():
@@ -95,7 +96,7 @@ def some_view(request):
     
 @login_required
 def restricted(request):
-    return render(request, 'petweb/restricted.html')
+    return render(request, 'petpals/restricted.html')
 
 
 def get_server_side_cookie(request, cookie, default_val=None): 
@@ -136,7 +137,7 @@ def community(request):
         users = []
 
     context_dict = {'posts': posts, 'users': users, 'query': query}  
-    return render(request, 'petweb/community.html', context=context_dict)
+    return render(request, 'petpals/community.html', context=context_dict)
 
 
 def register(request):
@@ -186,11 +187,11 @@ def create_post(request):
             post = form.save(commit=False)
             post.user = request.user 
             post.save()
-            return redirect('petweb:community')
+            return redirect('petpals:community')
     else:
         form = PostForm()
 
-    return render(request, 'petweb/create_post.html', {'form': form})
+    return render(request, 'petpals/create_post.html', {'form': form})
 
 @login_required
 def view_post(request, post_id):
@@ -203,7 +204,7 @@ def view_post(request, post_id):
     top_level_comments = all_comments.filter(replyee__isnull=True)
 
     reply_to = request.GET.get("reply_to", None)
-
+    user_has_liked = post.like_set.filter(user=request.user).exists()
     if request.method == "POST":
         content = request.POST.get("content")
         replyee_id = request.POST.get("replyee_id")
@@ -223,14 +224,37 @@ def view_post(request, post_id):
                 replyee=replyee 
             )
 
-            return redirect('petweb:view_post', post_id=post.id)
+            return redirect('petpals:view_post', post_id=post.id)
 
-    return render(request, "petweb/view_post.html", {
+        
+    context = {
         "post": post,
-        "top_level_comments": top_level_comments, 
-        "all_comments": all_comments, 
+        "top_level_comments": top_level_comments,
+        "all_comments": all_comments,
         "reply_to": int(reply_to) if reply_to else None,
-    })
+        "user_has_liked": user_has_liked,  
+    }
+    return render(request, "petpals/view_post.html", context)
+
+@login_required
+def like_post(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        user = request.user
+
+        post = Post.objects.get(id=post_id)
+
+        like, created = Like.objects.get_or_create(user=user, post=post)
+
+        if not created:
+            like.delete()
+            is_liked = False
+        else:
+            is_liked = True
+
+        like_count = post.like_set.count()
+        return JsonResponse({'is_liked': is_liked, 'like_count': like_count})
+
 
 @login_required
 def account(request):
@@ -240,14 +264,14 @@ def account(request):
         form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
-            return redirect('petweb:account')
+            return redirect('petpals:account')
     else:
         form = UserProfileForm(instance=user_profile)
 
     context = {
         "form": form,
     }
-    return render(request, 'petweb/account.html', context)
+    return render(request, 'petpals/account.html', context)
 
 def goto_url(request):
     page_id = request.GET.get('page_id')
@@ -259,4 +283,4 @@ def goto_url(request):
             return redirect(page.url)
         except Page.DoesNotExist:
             pass
-    return redirect(reverse('petweb:index'))
+    return redirect(reverse('petpals:index'))

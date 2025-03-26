@@ -23,7 +23,7 @@
     {% endif %}
 
     {% if user.is_authenticated %}
-        <a href="{% url 'petweb:add_page' category.slug %}">Add Page</a>
+        <a href="{% url 'petpals:add_page' category.slug %}">Add Page</a>
     {% endif %}
 
     {% else %}

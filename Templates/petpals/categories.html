@@ -4,12 +4,12 @@
         {% if c == current_category %}
         <li>
         <strong>
-            <a href="{% url 'petweb:show_category' c.slug %}">{{ c.name }}</a>
+            <a href="{% url 'petpals:show_category' c.slug %}">{{ c.name }}</a>
         </strong>
         </li>
         {% else %}
         <li>
-            <a href="{% url 'petweb:show_category' c.slug %}">{{ c.name }}</a>
+            <a href="{% url 'petpals:show_category' c.slug %}">{{ c.name }}</a>
         </li>
         {% endif %}
     {% endfor %}

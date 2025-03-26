@@ -1,7 +1,7 @@
 from django import forms
-from petweb.models import Category, Page
+from petpals.models import Category, Page
 from django.contrib.auth.models import User
-from petweb.models import UserProfile, Post, Comment
+from petpals.models import UserProfile, Post, Comment
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(
