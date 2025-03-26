@@ -6,12 +6,6 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from petpals.models import Post, Comment, UserProfile
-from petpals.forms import PostForm, CommentForm
-from petpals.forms import UserForm, UserProfileForm
-from django.contrib.auth.models import User 
-from django.http import JsonResponse
-
 
 
 
@@ -254,7 +248,6 @@ def like_post(request):
 
         like_count = post.like_set.count()
         return JsonResponse({'is_liked': is_liked, 'like_count': like_count})
-
 
 @login_required
 def account(request):

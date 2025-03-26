@@ -42,6 +42,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255, default="Untitled Post")
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
     statement = models.TextField(blank=True, null=True) 
+    likes = models.ManyToManyField(User, related_name='liked_posts', through='Like')
     views = models.IntegerField(default=0)
     time = models.DateTimeField(auto_now_add=True)
     def __str__(self):
