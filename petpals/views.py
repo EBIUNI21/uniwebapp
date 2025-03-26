@@ -1,11 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from petpals.models import Category, Page, Like
+from petpals.models import Category, Page
 from petpals.forms import PageForm, CategoryForm, UserForm, UserProfileForm
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from petpals.models import Post, Comment, UserProfile, Like
+from petpals.forms import PostForm, CommentForm
+from petpals.forms import UserForm, UserProfileForm
+from django.contrib.auth.models import User 
+from django.http import JsonResponse
+
 
 
 
