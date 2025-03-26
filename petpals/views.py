@@ -283,3 +283,18 @@ def goto_url(request):
         except Page.DoesNotExist:
             pass
     return redirect(reverse('petpals:index'))
+
+@login_required
+def edit_profile(request):
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('petpals:account')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'petpals/edit_profile.html', {'form': form})
+

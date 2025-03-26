@@ -5,12 +5,19 @@
 
 {% block body_block %}
     <div class="container">
+        <div class="container-card">
         <h2>My Account</h2>
 
         <div>
             <p>Welcome, {{ user.username }}!</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
+        {% if user.userprofile.bio %}
+            <p><strong>Bio:</strong> {{ user.userprofile.bio }}</p>
+        {% else %}
+            <p><em>No bio set yet.</em></p>
+        {% endif %}
+
 
         {% if user.userprofile.picture and user.userprofile.picture.name %}
             <h4> Profile Picture:</h4>
@@ -25,7 +32,8 @@
                 class="img-thumbnail"
                 width="300" height="300">
         {% endif %}
-
+    </div>
+    <div class="container-card">
         <h3>Your Posts</h3>
         {% if user.post_set.all %}
             <ul class="list-group">
@@ -39,6 +47,7 @@
         {% else %}
             <p>You haven't made any posts yet.</p>
         {% endif %}
+    </div>
     </div>
 
 {% endblock %}

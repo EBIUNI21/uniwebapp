@@ -28,25 +28,35 @@
                 </ul>
             
                 <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                My Account
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                                <li><a class="dropdown-item" href="{% url 'petpals:account' %}">View Account</a></li>
-                                <li>
-                                    <form method="post" action="{% url 'auth_logout' %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="dropdown-item">Logout</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
-                    {% endif %}          
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            {% if user.userprofile.picture and user.userprofile.picture.url %}
+                                <img src="{{ user.userprofile.picture.url }}"
+                                     alt="Profile Picture"
+                                     class="rounded-circle me-2"
+                                     width="32" height="32">
+                            {% else %}
+                                <img src="{{ MEDIA_URL }}profile_images/default.jpg"
+                                     alt="Default Picture"
+                                     class="rounded-circle me-2"
+                                     width="32" height="32">
+                            {% endif %}
+                            <span>{{ user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'petpals:account' %}">View Account</a></li>
+                            <li><a class="dropdown-item" href="{% url 'petpals:edit_profile' %}">Edit Profile</a></li>
+                            <li>
+                              <form method="post" action="{% url 'auth_logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Logout</button>
+                              </form>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+                        
                 </ul>
             </div>
         </div>

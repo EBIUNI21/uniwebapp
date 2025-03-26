@@ -19,4 +19,7 @@ urlpatterns = [path('', views.index, name='index'),
                path('account/', views.account, name='account'),
                path('goto/', views.goto_url, name='goto'),
                path('like/', views.like_post, name='like_post'),
+               path('account/edit/', views.edit_profile, name='edit_profile')
+
+
 ]

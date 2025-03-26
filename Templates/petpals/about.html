@@ -1,17 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title_block %}About petpals{% endblock %}
+{% block title_block %}About Us{% endblock %}
 
 {% block body_block %}
-    <div>
-        here is the about page. <br />
-        <strong>This tutorial has been put together by Zak.</strong><br />
-    </div>
-
-    <p>Visits: {{ visits }}</p>  
-
-    <div>
-        <a href="{% url 'petpals:index' %}">Index Page</a><br />
-    </div>
+<div class="container-card text-center">
+    This is a Online Pet Social Media Website.
+</div>
 {% endblock %}
