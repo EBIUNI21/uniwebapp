@@ -10,25 +10,41 @@
         <p>Hello, {{ user.username }}!</p>
     {% else %}
         <p>Hello User! Please log in or register to join our community.</p>
-    {% endif %}
+    {% endif %} 
 </div>
 <div class="container mt-4">
     <div class="row">
       <div class="col-md-6">
         <div class="container-card">
           <h4>Most Popular Posts Of All Time</h4>
-          <p>Most Popular Posts</p>
+          {% for post in most_popular_all_time %}
+          <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.statement }}</p>
+                <a href="{% url 'petpals:view_post' post.id %}" class="btn btn-info">View Post</a>
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
       <div class="col-md-6">
         <div class="container-card">
           <h4>Most Popular Posts Of The Day</h4>
-          <p>Most Popular Posts.</p>
+          {% if most_popular_today%}
+            {% for post in most_popular_today %}
+            <div class="card mb-3">
+              <div class="card-body">
+                  <h5 class="card-title">{{ post.title }}</h5>
+                  <p class="card-text">{{ post.statement }}</p>
+                  <a href="{% url 'petpals:view_post' post.id %}" class="btn btn-info">View Post</a>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <p> Be the first to make a post today!</p>
+          {% endif %}
         </div>
       </div>
     </div>
-  </div>
-  
-  
-  
 {% endblock %}

@@ -1,13 +1,21 @@
 from django.contrib import admin
-from petpals.models import UserProfile, Category, Page
+from petpals.models import UserProfile, Post, Comment, Like
 
-admin.site.register(UserProfile)
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'bio', 'picture')
+    search_fields = ('user__username',)
 
-class PageAdmin (admin.ModelAdmin):
-    list_display = ('title', 'category', 'url')
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'user', 'time')
+    search_fields = ('title', 'user__username')
 
-admin.site.register(Page, PageAdmin)
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'post', 'time')
+    search_fields = ('user__username', 'content')
 
-class CategoryAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug':('name',)}
-admin.site.register(Category, CategoryAdmin)
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'post')

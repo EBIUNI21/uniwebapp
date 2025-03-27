@@ -16,15 +16,10 @@ from django.http import JsonResponse
 
 
 def index(request):
-    category_list = Category.objects.order_by('-likes')[:5]
-    page_list = Page.objects.order_by('-views')[:5]
-    context_dict = {}
-    context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
-    context_dict['categories'] = category_list
-    context_dict['pages'] = page_list
-    visitor_cookie_handler(request)
-    response = render(request, 'petpals/index.html', context=context_dict)
-    return response
+    most_popular_all_time = Post.objects.order_by('-views')[:3]
+    most_popular_today = Post.objects.filter(time__date=datetime.today()).order_by('-views')[:3]
+
+    return render(request, 'petpals/index.html', {'most_popular_all_time': most_popular_all_time,'most_popular_today': most_popular_today,})
 
 def about(request):
     print(request.method)
@@ -298,3 +293,12 @@ def edit_profile(request):
 
     return render(request, 'petpals/edit_profile.html', {'form': form})
 
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, user=request.user)
+
+    if request.method == "POST":
+        post.delete()
+        return redirect('petpals:account')
+
+    return render(request, 'petpals/confirm_delete.html', {'post': post})
