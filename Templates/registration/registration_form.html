@@ -5,12 +5,14 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>Register Here</h1>
+<div class="container-card ">
+    <h2 class="text-center">Register Here</h2>
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-success w-100 mt-2">Register</button>
 </form>
+</div>
 
 {% endblock %}
