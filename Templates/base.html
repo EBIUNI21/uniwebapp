@@ -53,9 +53,13 @@
                                 <button type="submit" class="dropdown-item">Logout</button>
                               </form>
                             </li>
+                            
                         </ul>
                     </li>
-                {% endif %}
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
+                    {% endif %}
                         
                 </ul>
             </div>
