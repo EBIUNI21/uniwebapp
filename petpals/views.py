@@ -278,15 +278,15 @@ def like_post(request):
 
 @login_required
 def account(request):
-    UserProfilefile, created = UserProfile.objects.get_or_create(user=request.user)
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=UserProfilefile)
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
             return redirect('petpals:account')
     else:
-        form = UserProfileForm(instance=UserProfilefile)
+        form = UserProfileForm(instance=user_profile)
 
     context = {
         "form": form,
@@ -307,15 +307,15 @@ def goto_url(request):
 
 @login_required
 def edit_profile(request):
-    UserProfilefile, _ = UserProfile.objects.get_or_create(user=request.user)
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=UserProfilefile)
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
             return redirect('petpals:account')
     else:
-        form = UserProfileForm(instance=UserProfilefile)
+        form = UserProfileForm(instance=user_profile)
 
     return render(request, 'petpals/edit_profile.html', {'form': form})
 
@@ -328,3 +328,12 @@ def delete_post(request, post_id):
         return redirect('petpals:account')
 
     return render(request, 'petpals/confirm_delete.html', {'post': post})
+
+def user_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(UserProfile, user=user)
+    
+    return render(request, 'petpals/user_profile.html', {
+        'profile': profile,
+        'profile_user': user
+    })
