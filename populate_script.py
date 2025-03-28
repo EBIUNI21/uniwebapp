@@ -7,7 +7,6 @@ django.setup()
 from django.contrib.auth.models import User
 from petpals.models import UserProfile, Post, Comment, Like
 from django.utils import timezone
-import random
 
 def add_user(username, email, password="testpassword"):
     user = User.objects.get_or_create(username=username, email=email)[0]
@@ -37,9 +36,9 @@ def add_like(user, post):
 
 def populate():
 
-    user1, profile1 = add_user('alice', 'alice@example.com')
-    user2, profile2 = add_user('bob', 'bob@example.com')
-    user3, profile3 = add_user('charlie', 'charlie@example.com')
+    user1 = add_user('alice', 'alice@example.com')
+    user2 = add_user('bob', 'bob@example.com')
+    user3 = add_user('charlie', 'charlie@example.com')
 
     post1 = add_post(user1, 'Alices First Post', 'This is Alices first post!', views=100)
     post2 = add_post(user2, 'Bobs Django Adventure', 'Bob talks about learning Django', views=150)
