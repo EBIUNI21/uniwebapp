@@ -4,6 +4,7 @@ from petpals import views
 
 app_name = 'petpals' 
 
+
 urlpatterns = [path('', views.index, name='index'),
                path('about/', views.about, name='about'),
                path('category/<slug:category_name_slug>/add_page/', views.add_page,name='add_page'),
@@ -20,6 +21,6 @@ urlpatterns = [path('', views.index, name='index'),
                path('like/', views.like_post, name='like_post'),
                path('account/edit/', views.edit_profile, name='edit_profile'),
                path('post/<int:post_id>/delete/', views.delete_post, name='delete_post'),
-               path('profile/<str:username>/', views.UserProfile, name='UserProfile'),
+               path('profile/<str:username>/', views.user_profile, name='UserProfile'),
 
 ]
