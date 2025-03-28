@@ -7,14 +7,12 @@ django.setup()
 from django.contrib.auth.models import User
 from petpals.models import UserProfile, Post, Comment, Like
 from django.utils import timezone
-import random
 
 def add_user(username, email, password="testpassword"):
     user = User.objects.get_or_create(username=username, email=email)[0]
     user.set_password(password)
     user.save()
-    profile = UserProfile.objects.get_or_create(user=user)[0]
-    return user, profile
+    return user
 
 def add_post(user, title, statement, views=0):
     post = Post.objects.get_or_create(user=user, title=title, statement=statement)[0]

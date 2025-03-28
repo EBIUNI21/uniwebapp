@@ -2,6 +2,7 @@ const likeUrl = "{% url 'petpals:like_post' %}";
 const csrfToken = "{{ csrf_token }}";
 
 $(document).ready(function () {
+<<<<<<< HEAD:static/javascript/comment.js
     console.log("Ready and loaded!");
     $('.like-btn').on('click', function () {
         const postId = $(this).data('post-id');
@@ -24,6 +25,8 @@ $(document).ready(function () {
     });
 });
 
+=======
+>>>>>>> e72553d5be8009adf0adfd53f1974806d50eea03:static/javascript/base.js
     $('form#new-comment-form').on('submit', function (e) {
         e.preventDefault();
         const textarea = $(this).find('textarea[name="content"]');
