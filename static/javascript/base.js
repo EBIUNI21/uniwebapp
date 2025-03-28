@@ -1,22 +1,4 @@
 $(document).ready(function () {
-    $('.like-btn').on('click', function () {
-        const postId = $(this).data('post-id');
-        const button = $(this);
-
-        $.ajax({
-            url: likeUrl,
-            type: 'POST',
-            data: {
-                'post_id': postId,
-                'csrfmiddlewaretoken': csrfToken
-            },
-            success: function (response) {
-                button.text(response.is_liked ? 'Unlike' : 'Like');
-                button.siblings('.like-count').text(response.like_count);
-            }
-        });
-    });
-
     $('form#new-comment-form').on('submit', function (e) {
         e.preventDefault();
         const textarea = $(this).find('textarea[name="content"]');

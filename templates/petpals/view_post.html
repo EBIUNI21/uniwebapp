@@ -74,3 +74,11 @@
 
     </div>
 {% endblock %}
+
+{% block extra_js %}
+    <script>
+        var likeUrl = "{% url 'petpals:like_post' %}";
+        var csrfToken = "{{ csrf_token }}";
+    </script>
+    <script src="{% static 'javascript/like.js' %}"></script>
+{% endblock %}
