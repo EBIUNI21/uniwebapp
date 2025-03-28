@@ -12,7 +12,7 @@ SECRET_KEY = 'qnnkucur$+s32gc(n@d^ezi0*6t!1&3s83!o@6fcsi13gj+5z1'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['zakariaboulaich.pythonanywhere.com']
 
 INSTALLED_APPS =[
 'django.contrib.admin',
@@ -102,4 +102,3 @@ REGISTRATION_OPEN = True
 REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL ='petpals:index'
 LOGIN_URL ='auth_login'
-
