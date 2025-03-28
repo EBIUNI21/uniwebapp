@@ -278,15 +278,15 @@ def like_post(request):
 
 @login_required
 def account(request):
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    UserProfilefile, created = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=UserProfilefile)
         if form.is_valid():
             form.save()
             return redirect('petpals:account')
     else:
-        form = UserProfileForm(instance=user_profile)
+        form = UserProfileForm(instance=UserProfilefile)
 
     context = {
         "form": form,
@@ -307,15 +307,15 @@ def goto_url(request):
 
 @login_required
 def edit_profile(request):
-    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    UserProfilefile, _ = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=UserProfilefile)
         if form.is_valid():
             form.save()
             return redirect('petpals:account')
     else:
-        form = UserProfileForm(instance=user_profile)
+        form = UserProfileForm(instance=UserProfilefile)
 
     return render(request, 'petpals/edit_profile.html', {'form': form})
 
