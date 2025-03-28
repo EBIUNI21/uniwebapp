@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% load static %}
+<script src="{% static 'javascript/base.js' %}"></script>
+
 
 {% block title_block %}
     {{ post.title }}
@@ -34,9 +37,9 @@
                     <li class="list-group-item">
                         <strong>{{ comment.user.username }}</strong>: {{ comment.content }}
                         <small class="text-muted d-block">{{ comment.time }}</small>
-
+        
                         <a href="?reply_to={{ comment.id }}" class="btn btn-sm btn-link">Reply</a>
-
+        
                         {% if reply_to == comment.id %}
                             <form method="POST" class="mt-2">
                                 {% csrf_token %}
@@ -47,30 +50,8 @@
                                 <button type="submit" class="btn btn-success btn-sm">Reply</button>
                             </form>
                         {% endif %}
-
-                        {% for reply in all_comments %}
-                            {% if reply.replyee == comment %}
-                                <ul class="list-group mt-2 ml-3">
-                                    <li class="list-group-item">
-                                        <strong>{{ reply.user.username }}</strong>: {{ reply.content }}
-                                        <small class="text-muted d-block">{{ reply.time }}</small>
-
-                                        <a href="?reply_to={{ reply.id }}" class="btn btn-sm btn-link">Reply</a>
-
-                                        {% if reply_to == reply.id %}
-                                            <form method="POST" class="mt-2">
-                                                {% csrf_token %}
-                                                <div class="form-group">
-                                                    <textarea name="content" class="form-control" rows="2" placeholder="Write your reply..."></textarea>
-                                                    <input type="hidden" name="replyee_id" value="{{ reply.id }}">
-                                                </div>
-                                                <button type="submit" class="btn btn-success btn-sm">Reply</button>
-                                            </form>
-                                        {% endif %}
-                                    </li>
-                                </ul>
-                            {% endif %}
-                        {% endfor %}
+        
+                        {% include "petpals/replies.html" with parent=comment reply_to=reply_to %}
                     </li>
                 {% endfor %}
             </ul>
@@ -78,43 +59,18 @@
             <p>No comments yet. Be the first to comment!</p>
         {% endif %}
 
-        <script>
-            $(document).ready(function() {
-                $('.like-btn').on('click', function() {
-                    var postId = $(this).data('post-id');
-                    var button = $(this);
-    
-                    $.ajax({
-                        url: "{% url 'petpals:like_post' %}",
-                        type: 'POST',
-                        data: {
-                            'post_id': postId,
-                            'csrfmiddlewaretoken': '{{ csrf_token }}',
-                        },
-                        success: function(response) {
-                            if (response.is_liked) {
-                                button.text('Unlike');
-                            } else {
-                                button.text('Like');
-                            }
-                            button.siblings('.like-count').text(response.like_count);
-                        }
-                    })
-                })
-            })
-        </script>
+    {% if user.is_authenticated %}
+        <h4>Add a Comment</h4>
+        <form method="POST" class="mt-3" id="new-comment-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <textarea name="content" class="form-control" rows="3" placeholder="Write your comment..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Comment</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'petpals:login' %}">Log in</a> to post a comment.</p>
+    {% endif %}
 
-        {% if user.is_authenticated %}
-            <h4>Add a Comment</h4>
-            <form method="POST" class="mt-3">
-                {% csrf_token %}
-                <div class="form-group">
-                    <textarea name="content" class="form-control" rows="3" placeholder="Write your comment..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Add Comment</button>
-            </form>
-        {% else %}
-            <p><a href="{% url 'petpals:login' %}">Log in</a> to post a comment.</p>
-        {% endif %}
     </div>
 {% endblock %}

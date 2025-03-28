@@ -1,0 +1,26 @@
+{% for comment in all_comments %}
+    {% if comment.replyee == parent %}
+        <ul class="list-group mt-2 ms-4">
+            <li class="list-group-item">
+                <strong>{{ comment.user.username }}</strong>: {{ comment.content }}
+                <small class="text-muted d-block">{{ comment.time }}</small>
+
+                <a href="?reply_to={{ comment.id }}" class="btn btn-sm btn-link">Reply</a>
+
+                {% if reply_to == comment.id %}
+                    <form method="POST" class="mt-2">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea name="content" class="form-control" rows="2" placeholder="Write your reply..."></textarea>
+                            <input type="hidden" name="replyee_id" value="{{ comment.id }}">
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm">Reply</button>
+                    </form>
+                {% endif %}
+
+                {# Call recursively to show deeper replies #}
+                {% include "petpals/replies.html" with parent=comment reply_to=reply_to %}
+            </li>
+        </ul>
+    {% endif %}
+{% endfor %}

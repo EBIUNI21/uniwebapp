@@ -12,7 +12,7 @@ SECRET_KEY = 'qnnkucur$+s32gc(n@d^ezi0*6t!1&3s83!o@6fcsi13gj+5z1'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['zakariaboulaich.pythonanywhere.com']
+ALLOWED_HOSTS = ['zakariaboulaich.pythonanywhere.com','127.0.0.1']
 
 INSTALLED_APPS =[
 'django.contrib.admin',

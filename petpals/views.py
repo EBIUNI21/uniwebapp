@@ -191,16 +191,43 @@ def create_post(request):
 @login_required
 def view_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-
     post.views += 1
     post.save()
 
     all_comments = Comment.objects.filter(post=post).order_by("time")
     top_level_comments = all_comments.filter(replyee__isnull=True)
-
     reply_to = request.GET.get("reply_to", None)
     user_has_liked = post.like_set.filter(user=request.user).exists()
-    if request.method == "POST":
+
+    if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+        content = request.POST.get("content", "").strip()
+        replyee_id = request.POST.get("replyee_id")
+        
+        if content:
+            replyee = None
+            if replyee_id:
+                try:
+                    replyee = Comment.objects.get(id=int(replyee_id))
+                except Comment.DoesNotExist:
+                    replyee = None
+
+            comment = Comment.objects.create(
+                post=post,
+                user=request.user,
+                content=content,
+                replyee=replyee
+            )
+            return JsonResponse({
+                'success': True,
+                'username': request.user.username,
+                'content': comment.content,
+                'timestamp': comment.time.strftime("%Y-%m-%d %H:%M"),
+                'replyee_id': replyee.id if replyee else None
+            })
+        return JsonResponse({'success': False}, status=400)
+
+
+    elif request.method == "POST":
         content = request.POST.get("content")
         replyee_id = request.POST.get("replyee_id")
 
@@ -208,28 +235,27 @@ def view_post(request, post_id):
             replyee = None
             if replyee_id:
                 try:
-                    replyee = Comment.objects.get(id=int(replyee_id))  
+                    replyee = Comment.objects.get(id=int(replyee_id))
                 except Comment.DoesNotExist:
-                    replyee = None  
+                    replyee = None
 
             Comment.objects.create(
                 post=post,
                 user=request.user,
                 content=content,
-                replyee=replyee 
+                replyee=replyee
             )
-
             return redirect('petpals:view_post', post_id=post.id)
 
-        
     context = {
         "post": post,
         "top_level_comments": top_level_comments,
         "all_comments": all_comments,
         "reply_to": int(reply_to) if reply_to else None,
-        "user_has_liked": user_has_liked,  
+        "user_has_liked": user_has_liked,
     }
     return render(request, "petpals/view_post.html", context)
+
 
 @login_required
 def like_post(request):
