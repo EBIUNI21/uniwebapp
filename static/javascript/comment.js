@@ -1,7 +1,13 @@
+const likeUrl = "{% url 'petpals:like_post' %}";
+const csrfToken = "{{ csrf_token }}";
+
 $(document).ready(function () {
+    console.log("Ready and loaded!");
     $('.like-btn').on('click', function () {
         const postId = $(this).data('post-id');
         const button = $(this);
+
+        console.log("Clicked post", postId);
 
         $.ajax({
             url: likeUrl,
@@ -16,6 +22,7 @@ $(document).ready(function () {
             }
         });
     });
+});
 
     $('form#new-comment-form').on('submit', function (e) {
         e.preventDefault();

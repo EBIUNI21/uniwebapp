@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
-<script src="{% static 'javascript/base.js' %}"></script>
-
 
 {% block title_block %}
     {{ post.title }}
 {% endblock %}
 
 {% block body_block %}
+
     <div class="container">
         <h2>{{ post.title }}</h2>
 
@@ -73,4 +72,10 @@
     {% endif %}
 
     </div>
+    <script>
+        const likeUrl = "{% url 'petpals:like_post' %}";
+        const csrfToken = "{{ csrf_token }}";
+    </script>
+    <script src="{% static 'javascript/base.js' %}"></script>
+    
 {% endblock %}
